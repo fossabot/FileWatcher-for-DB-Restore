@@ -1,0 +1,18 @@
+Microsoft (R) .NET Framework Installation utility Version 4.7.2558.0
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+
+
+The uninstall is beginning.
+See the contents of the log file for the C:\Users\avinashs\Documents\GitHub\FileWatcher\FileWatcher\bin\Debug\FileWatcher.exe assembly's progress.
+The file is located at C:\Users\avinashs\Documents\GitHub\FileWatcher\FileWatcher\bin\Debug\FileWatcher.InstallLog.
+Uninstalling assembly 'C:\Users\avinashs\Documents\GitHub\FileWatcher\FileWatcher\bin\Debug\FileWatcher.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\avinashs\Documents\GitHub\FileWatcher\FileWatcher\bin\Debug\FileWatcher.InstallLog
+   assemblypath = C:\Users\avinashs\Documents\GitHub\FileWatcher\FileWatcher\bin\Debug\FileWatcher.exe
+Removing EventLog source Service.
+Service Service is being removed from the system...
+Service Service was successfully removed from the system.
+
+The uninstall has completed.
