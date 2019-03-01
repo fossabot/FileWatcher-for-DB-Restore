@@ -1,8 +1,7 @@
 ﻿/*
  * Author       -   Avinash Singh
  * Date         -   27 February 2019
- * Manager      -   Muthu Ramakrishnan
- * Verion       -   1.0.0
+ * Version       -   1.0.0
  * Description  -   A Demo FileWatcher used for Watching a specific folder for .bak files - 
  *                  Pick it up and Restore the Database.
  *                  After Restoration is complete it also triggers a Stored procedure in the Database.
@@ -47,8 +46,10 @@ namespace FileWatcher
         protected override void OnStart(string[] args)
         {
             //System.Diagnostics.Debugger.Launch(); FOR DEBUGGING
+
             // Creating a list of FileSystemWatchers and dynamically populating - one for each of my drives.
             List<FileSystemWatcher> fileSystemWatchers = new List<FileSystemWatcher>();
+	    //Location can be changed to Any location (Local, Network, Remote etc..)
             fileSystemWatchers.Add(new FileSystemWatcher() { Path = @"C:\Users\avinashs\Documents\GitHub\Electron-Desktop-App-Sandbox\" });
             //fileSystemWatchers.Add(new FileSystemWatcher() { Path = @"D:\" });
             //fileSystemWatchers.Add(new FileSystemWatcher() { Path = @"E:\" });
@@ -62,7 +63,7 @@ namespace FileWatcher
                 fsw.Deleted += new FileSystemEventHandler(OnChanged);
                 fsw.Renamed += new RenamedEventHandler(OnRenamed);
 
-                // Watch all files in folder and subfolders.
+                // Watch .bak files in folder and subfolders.
                 fsw.Filter = "*.bak";
                 fsw.IncludeSubdirectories = false;
 
@@ -81,18 +82,14 @@ namespace FileWatcher
                                            "File/Directory Change: " + e.ChangeType.ToString()};
             // Adding in a condition to resolve issue of FileTracker recursively tracking itself on WriteToFile().
             if (!e.FullPath.Contains("FileWatcher.txt"))
-                WriteToFile(info);
-
-            // Restore the Database.
-            //RestoreDatabase("SANDBOX", e.FullPath, "LDM-AVINASHS", "filewatcher", "password1!");
-
-
+                WriteToFile(info);                                  
         }
 
 	// Call the Restore Method to restore the database.
         private void OnChangedRestore(object sender, FileSystemEventArgs e)
         {
-            //System.Diagnostics.Debugger.Launch(); FOR DEBUGGING
+	    bool fileLocked = false;
+            //System.Diagnostics.Debugger.Launch(); FOR DEBUGGING 
             string[] info = new string[] { "Timestamp: " + DateTime.UtcNow.ToString("MM-dd-yyyy HH:mm:ss"),
                                            "File/Directory Name: " + e.Name,
                                            "File/Directory URL: " + e.FullPath,
@@ -101,16 +98,37 @@ namespace FileWatcher
             if (!e.FullPath.Contains("FileWatcher.txt"))
                 WriteToFile(info);
 
+	    // Verify if the File is locked or in Use.
+	    FileInfo backupFile = new FileInfo(e.FullPath);
+	    fileLocked = IsFileLocked(backupFile);
+
             // Restore the Database.
-            RestoreDatabase("SANDBOX", e.FullPath, "LDM-AVINASHS", "filewatcher", "password1!");
+	    if(!fileLocked)
+	    {
+		RestoreDatabase("SANDBOX", e.FullPath, "LDM-AVINASHS", "filewatcher", "password1!");
+	    }
+	    else
+	    {
+		string[] log = new string[] { "Timestamp: " + DateTime.UtcNow.ToString("MM-dd-yyyy HH:mm:ss"),
+					   "File/Directory Name: " + e.Name,
+					   "File/Directory URL: " + e.FullPath,
+					   "File is either Locked or in Use by other Process"
+					    }; 
+		if (!e.FullPath.Contains("FileWatcher.txt"))
+		    WriteToFile(log);
+	    }
+		
 
         }
 
 	// Restore Database and trigger the stored procedure.
 	public void RestoreDatabase(String databaseName, String filePath, String serverName, String userName, String password)
         {
-            //System.Diagnostics.Debugger.Launch(); FOR DEBUGGING
-            Restore sqlRestore = new Restore();
+	    //System.Diagnostics.Debugger.Launch(); FOR DEBUGGING
+
+	    String connectionString = "Server=" + serverName + "; DataBase=" + databaseName + ";Integrated Security=SSPI"
+	    
+	    Restore sqlRestore = new Restore();
             BackupDeviceItem deviceItem = new BackupDeviceItem(filePath, DeviceType.File);
             sqlRestore.Devices.Add(deviceItem);
             sqlRestore.Database = databaseName;
@@ -124,32 +142,38 @@ namespace FileWatcher
 
             sqlRestore.ReplaceDatabase = true;
             
-            // Restoration in process.
+            // Restoration in process. The Database is Restored at a Default location. Under the DATA Folder.
             sqlRestore.SqlRestore(sqlServer);
             db = sqlServer.Databases[databaseName];
             db.SetOnline();
             sqlServer.Refresh();
 
-
-            // Trigger Stored Procedure after restore.
-            using (SqlConnection conn = new SqlConnection("Server=(local);DataBase=SANDBOX;Integrated Security=SSPI"))
-            {
-                conn.Open();
-
-                // 1.  create a command object identifying the stored procedure
-                SqlCommand cmd = new SqlCommand("sp_test_temp", conn);
-
-                // 2. set the command object so it knows to execute a stored procedure
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                // execute the command
-                using (SqlDataReader rdr = cmd.ExecuteReader()){}
-            }
+	    // Trigger Stored Procedure after restore.
+	    triggerSP(connectionString);
 
         }
 
+	// Trigger Stored Procedure after restore. MAKE ANOTHER METHOD.
+	public void triggerSP(String connectionStr)
+	{
+	    
+	    SqlConnection conn = new SqlConnection(connectionStr);
+
+	    // conn.Open();
+	    // 1.  create a command object identifying the stored procedure
+	    SqlCommand cmd = new SqlCommand("sp_test_temp", conn);
+
+	    // 2. set the command object so it knows to execute a stored procedure
+	    cmd.CommandType = CommandType.StoredProcedure;
+
+	    // Add a check here as well.
+	    // execute the command
+	    SqlDataReader rdr = cmd.ExecuteReader();
+
+	}
+
 	// What happens when the specified files are Renamed.
-        private void OnRenamed(object sender, RenamedEventArgs e)
+	private void OnRenamed(object sender, RenamedEventArgs e)
         {
             //System.Diagnostics.Debugger.Launch();
             string[] info = new string[] { "Timestamp: " + DateTime.UtcNow.ToString("MM-dd-yyyy HH:mm:ss"),
@@ -163,8 +187,35 @@ namespace FileWatcher
                 WriteToFile(info);
         }
 
+	// Check if File is Loked or is in Use.
+	protected virtual bool IsFileLocked(FileInfo file)
+	{
+	    FileStream stream = null;
+
+	    try
+	    {
+		stream = file.Open(FileMode.Open, FileAccess.Read, FileShare.None);
+	    }
+	    catch (IOException)
+	    {
+		//the file is unavailable because it is:
+		//still being written to
+		//or being processed by another thread
+		//or does not exist (has already been processed)
+		return true;
+	    }
+	    finally
+	    {
+		if (stream != null)
+		    stream.Close();
+	    }
+
+	    //file is not locked
+	    return false;
+	}
+
 	// Logs entry in a file. The file must exist before running the service (somehow).
-        private void WriteToFile(string[] info)
+	private void WriteToFile(string[] info)
         {
             //System.Diagnostics.Debugger.Launch();
             string path = @"C:\Users\avinashs\Desktop\FileWatcher.txt";
@@ -187,3 +238,13 @@ namespace FileWatcher
         }
     }
 }
+
+// Start up Notification.
+// Create a config file, CSV/XML, List of emails.
+// After we successfully restore the DB, send and email to user the restore has been started. 
+// Read the list of user from Config File.
+// Completion Email goes with the Start up Email.
+
+// Any Error/Warning, Separete list of users.
+
+// Data compare Notification
