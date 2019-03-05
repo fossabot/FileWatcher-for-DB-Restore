@@ -261,3 +261,7 @@ namespace FileWatcher
 // Any Error/Warning, Separete list of users.
 
 // Data compare Notification
+
+
+// PUT THE RESULT in A FILE - nested SPs - HIGH Prority !!!!!
+// No error handling in SPs.
