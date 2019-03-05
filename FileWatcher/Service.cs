@@ -37,6 +37,7 @@ namespace FileWatcher
 {
     public partial class Service : ServiceBase
     {
+	// Component initializer.
         public Service()
         {
             InitializeComponent();
