@@ -30,3 +30,6 @@ Please, No space, only TABS.
 1. Use "double quotes" for strings shown to the user that need to be externalized (localized)
 2. Use 'single quotes' otherwise
 3. All strings visible to the user need to be externalized
+
+Base code credit goes to https://github.com/michaelzhang92/FileWatcher
+Restore Feature is my work.
