@@ -170,7 +170,7 @@ namespace FileWatcher
 
 	    conn.Open();
 	    // 1.  create a command object identifying the stored procedure
-	    SqlCommand cmd = new SqlCommand("sp_test_temp", conn);
+	    SqlCommand cmd = new SqlCommand("usp_NestedSP", conn);
 
 	    // 2. set the command object so it knows to execute a stored procedure
 	    cmd.CommandType = CommandType.StoredProcedure;

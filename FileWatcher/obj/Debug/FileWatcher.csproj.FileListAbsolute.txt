@@ -38,7 +38,6 @@ C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\De
 C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\Microsoft.SqlServer.RegSvrEnum.dll
 C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\Microsoft.SqlServer.SqlTDiagM.dll
 C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\MySql.Data.xml
-C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\obj\Debug\FileWatcher.csprojAssemblyReference.cache
 C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\obj\Debug\FileWatcher.ProjectInstaller.resources
 C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\obj\Debug\FileWatcher.Service.resources
 C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\obj\Debug\FileWatcher.csproj.GenerateResource.cache
