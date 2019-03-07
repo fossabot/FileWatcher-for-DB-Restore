@@ -82,3 +82,45 @@ Affected parameters are:
 Removing EventLog source Service.
 Service Service is being removed from the system...
 Service Service was successfully removed from the system.
+Installing assembly 'C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.InstallLog
+   assemblypath = C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.exe
+Installing service Service...
+Service Service has been successfully installed.
+Creating EventLog source Service in log Application...
+Committing assembly 'C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.InstallLog
+   assemblypath = C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.exe
+Uninstalling assembly 'C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.InstallLog
+   assemblypath = C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.exe
+Removing EventLog source Service.
+Service Service is being removed from the system...
+Service Service was successfully removed from the system.
+Installing assembly 'C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.InstallLog
+   assemblypath = C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.exe
+Installing service Service...
+Service Service has been successfully installed.
+Creating EventLog source Service in log Application...
+Committing assembly 'C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.InstallLog
+   assemblypath = C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.exe
+Uninstalling assembly 'C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.InstallLog
+   assemblypath = C:\Users\avinashs\Documents\GitHub\FileWatcher-for-DB-Restore\FileWatcher\bin\Debug\FileWatcher.exe
+Removing EventLog source Service.
+Service Service is being removed from the system...
+Service Service was successfully removed from the system.
