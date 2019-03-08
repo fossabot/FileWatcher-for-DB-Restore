@@ -258,7 +258,6 @@ namespace FileWatcher
 // After we successfully restore the DB, send and email to user the restore has been started. 
 // Read the list of user from Config File.
 // Completion Email goes with the Start up Email.
-
 // Any Error/Warning, Separete list of users.
 
 // Data compare Notification
