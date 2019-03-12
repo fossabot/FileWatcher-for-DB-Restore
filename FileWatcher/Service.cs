@@ -32,6 +32,7 @@ using System.IO;
 using Microsoft.SqlServer.Management.Smo;
 using Microsoft.SqlServer.Management.Common;
 using System.Data.SqlClient;
+using System.Diagnostics;
 
 namespace FileWatcher
 {
@@ -106,8 +107,17 @@ namespace FileWatcher
 	    FileInfo backupFile = new FileInfo(e.FullPath);
 	    fileLocked = IsFileLocked(backupFile);
 
-            // Restore the Database.
-	    if(!fileLocked)
+	    // Restore the Database.
+	    while (fileLocked)
+	    {
+		// If the file is locked wait for 5 seconds before re-evaluating.
+		System.Threading.Thread.Sleep(5000);
+	    }
+
+	    // If the file is not locked Restore the database using that file.
+	    RestoreDatabase("SANDBOX", e.FullPath, "LDM-AVINASHS", "filewatcher", "password1!");
+
+	    /*if(!fileLocked)
 	    {
 		RestoreDatabase("SANDBOX", e.FullPath, "LDM-AVINASHS", "filewatcher", "password1!");
 		string[] log = new string[] { "Timestamp: " + DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss"),
@@ -125,10 +135,10 @@ namespace FileWatcher
 					    }; 
 		if (!e.FullPath.Contains("FileWatcher.txt"))
 		    WriteToFile(log);
-	    }
-		
+	    }*/
 
-        }
+
+	}
 
 	// Restore Database and trigger the stored procedure.
 	private void RestoreDatabase(String databaseName, String filePath, String serverName, String userName, String password)
@@ -167,20 +177,44 @@ namespace FileWatcher
 	{
 	    // This doesn't open the Connection. conn.Open() has to be explicitly called.
 	    SqlConnection conn = new SqlConnection(connectionStr);
+	    try
+	    {
 
-	    conn.Open();
-	    // 1.  create a command object identifying the stored procedure
-	    SqlCommand cmd = new SqlCommand("usp_NestedSP", conn);
+		conn.Open();
+		// 1.  create a command object identifying the stored procedure
+		SqlCommand cmd = new SqlCommand("usp_NestedSP", conn);
 
-	    // 2. set the command object so it knows to execute a stored procedure
-	    cmd.CommandType = CommandType.StoredProcedure;
+		// 2. set the command object so it knows to execute a stored procedure
+		cmd.CommandType = CommandType.StoredProcedure;
 
-	    // Add a check here as well.
-	    // execute the command
-	    SqlDataReader rdr = cmd.ExecuteReader();
+		// Add a check here as well.
+		// execute the command
+		SqlDataReader rdr = cmd.ExecuteReader();
 
-	    // Since we are not using - using block we have to explicitly call Close() to close the connection.
-	    conn.Close();
+		// Since we are not using - using block we have to explicitly call Close() to close the connection.
+		//conn.Close();
+	    }
+	    catch (SqlException SqlEx){
+		string[] error = new string[3] ;
+
+		string msg1 = "Errors Count:" + SqlEx.Errors.Count;
+		string msg2 = null;
+
+		foreach (SqlError myError in SqlEx.Errors)
+		    msg2 += myError.Number + " - " + myError.Message + "/" ;
+
+		error[0] = msg1;
+		error[1] = msg2;
+
+		WriteToFile(error);
+	    }
+	
+	    finally
+	    {
+		//call this if exception occurs or not
+		//in this example, dispose the WebClient
+		conn.Close();
+	    }
 
 	}
 
